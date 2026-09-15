@@ -1,7 +1,8 @@
 #!/bin/bash
 # Build the double-click launcher: one "Session Doctor.app" menu-bar app.
 # Source of truth is scripts/SessionDoctorBar.swift (committed); the .app
-# bundle is generated (git-ignored) — run this once per machine/checkout.
+# bundle itself is committed too, so a fresh clone runs on double-click.
+# Re-run this script (and commit the result) whenever the Swift code changes.
 # Usage: scripts/build-app.sh
 set -euo pipefail
 cd "$(dirname "$0")/.."
