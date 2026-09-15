@@ -31,7 +31,8 @@ session-doctor/
 │   └── server.py              loopback HTTP API + serves the built UI
 ├── tests/                     27-test safety net (throwaway DBs only)
 ├── web/                       Next.js + Tailwind dashboard (source only)
-├── scripts/                   doctor.sh helper + Swift menu-bar app source
+├── scripts/                   Swift source + doctor.sh helper + bootstrap.sh
+├── assets/logo.svg            README logo (vector, tiny)
 ├── settings.json              local config (git-ignored, auto-created)
 └── backups/                   per-chat bundles (git-ignored, auto-created)
 ```
@@ -113,6 +114,8 @@ restarting it.
 
 ## Fix flow
 
+<div align="center">
+
 ```mermaid
 flowchart TD
     A[Pick a red chat] --> B[Preview: counts + diff]
@@ -129,7 +132,11 @@ flowchart TD
     H -- Yes --> I[Commit + content-hash proof]
 ```
 
+</div>
+
 ## Restore flow
+
+<div align="center">
 
 ```mermaid
 flowchart TD
@@ -141,6 +148,8 @@ flowchart TD
     E -- Match --> G[Commit + content-hash proof]
     E -- Best-effort, mismatch --> H[Keep + report warnings]
 ```
+
+</div>
 
 ## Bundle formats
 
