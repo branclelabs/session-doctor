@@ -16,6 +16,7 @@ or roll everything back.**
 
 ```
 session-doctor/
+├── Session Doctor.app   clickable Mac app (committed — run it, don't open it)
 ├── setup.sh / run.sh          one-command setup · daily launcher
 ├── src/session_doctor/        the whole engine + API (stdlib Python only)
 │   ├── db.py                  Hermes reads (query_only, never writes)
