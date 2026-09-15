@@ -90,7 +90,7 @@ cmd_start() {
         rm -rf "$lockdir" 2>/dev/null || true
         continue
       fi
-      if [[ -n "${age:-}" && "$age" =~ ^[0-9]+$ ]] && (( now - age > 60 )); then
+      if [[ -n "${age:-}" && "$age" =~ ^[0-9]+$ ]] && (( now - age > 900 )); then
         rm -rf "$lockdir" 2>/dev/null || true
         continue
       fi
@@ -101,7 +101,7 @@ cmd_start() {
       echo "ALREADY http://127.0.0.1:$PORT/"
       return 10
     fi
-    if [[ $waited -ge 36 ]]; then
+    if [[ $waited -ge 1200 ]]; then
       echo "FAILED (another starter is stuck; remove $lockdir and retry)"
       return 1
     fi
@@ -113,6 +113,28 @@ cmd_start() {
     release_lock
     return 10
   fi
+  # Log dir must exist before anything redirects into it (fresh clones
+  # have no logs/ yet — without this the bootstrap redirect dies first).
+  mkdir -p "$LOGDIR"
+  # Fresh clone? Build what's missing first (venv, production web UI).
+  # The marker file lets the menu bar show "Setting up…" while this runs.
+  # Idempotent — re-running after a killed bootstrap just resumes it.
+  if [[ ! -x "$PROJECT_DIR/.venv/bin/python" || ! -f "$PROJECT_DIR/web/out/index.html" ]]; then
+    touch "$PROJECT_DIR/.session-doctor.bootstrap"
+    if ! "$PROJECT_DIR/scripts/bootstrap.sh" >>"$LOGFILE" 2>&1; then
+      rc=$?
+      rm -f "$PROJECT_DIR/.session-doctor.bootstrap"
+      release_lock
+      if [[ $rc -eq 3 ]]; then
+        echo "MISSING_PREREQ: one-time setup needs Python 3.11+ and Node 20+ — details in $LOGFILE"
+      else
+        echo "BOOTSTRAP_FAILED: one-time setup failed — details in $LOGFILE"
+        tail -20 "$LOGFILE" 2>/dev/null || true
+      fi
+      return 1
+    fi
+    rm -f "$PROJECT_DIR/.session-doctor.bootstrap"
+  fi
   # Stale pidfile from a crash/reboot — clear it, health check is the truth.
   rm -f "$PIDFILE"
   mkdir -p "$LOGDIR"
@@ -120,9 +142,9 @@ cmd_start() {
   nohup "$PROJECT_DIR/run.sh" --headless --port "$PORT" >>"$LOGFILE" 2>&1 &
   echo "$!" >"$PIDFILE"
   local i
-  # Budget (~18s) stays under the menu app's 25s helper watchdog so a slow
-  # but healthy boot is never killed mid-flight.
-  for i in $(seq 1 36); do
+  # Generous budget (10 min): first launches include the one-time build, and
+  # the menu app's start timeout comfortably exceeds it. Exits on first health.
+  for i in $(seq 1 1200); do
     if health >/dev/null; then
       echo "STARTED http://127.0.0.1:$PORT/"
       release_lock

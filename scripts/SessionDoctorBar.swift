@@ -146,7 +146,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
             self.isRunning = running
             self.statusItem.button?.image = pulseIcon(running: running)
-            if running {
+            // First launch builds the runtime in the background (marker file
+            // written by doctor.sh) — say so instead of flashing "Stopped".
+            let bootstrapping = FileManager.default.fileExists(
+                atPath: projectDir() + "/.session-doctor.bootstrap")
+            if bootstrapping && !running {
+                self.statusMenuItem.title = "Setting up first launch…"
+            } else if running {
                 let url = out.split(separator: " ").last.map(String.init) ?? ""
                 self.statusMenuItem.title = "Running · \(url)"
             } else {
@@ -154,9 +160,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
             self.openItem.isEnabled = running
             self.toggleItem.title = running ? "Stop Server" : "Start Server"
-            // Launch window only: retry a failed boot a few times, then stop
-            // nagging. After the first success we never auto-restart — the
-            // user may stop the server elsewhere on purpose (Ctrl+C).
             if running { self.succeededOnce = true }
             // Launch behaves like the old double-click app (boot + open), with
             // a few retries in case the first attempt races a dying process.
@@ -182,7 +185,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         toggleItem.isEnabled = false
         statusMenuItem.title = "Starting…"
         appLog("start requested (openAfter=\(openAfter))")
-        runDoctor("start") { [weak self] code, out in
+        // Long leash: a first launch includes the one-time build, which
+        // takes minutes. doctor.sh exits early on health; this only bounds
+        // a truly wedged helper.
+        runDoctor("start", timeout: 660) { [weak self] code, out in
             guard let self else { return }
             self.starting = false
             self.toggleItem.isEnabled = true

@@ -15,3 +15,4 @@ web/next-env.d.ts
 logs/
 .session-doctor.pid
 .session-doctor.lock
+.session-doctor.bootstrap
