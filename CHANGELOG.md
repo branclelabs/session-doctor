@@ -15,6 +15,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   environment and production web UI in the background (`scripts/bootstrap.sh`,
   shared with `setup.sh`), with a "Setting up first launch…" state in the
   menu and a plain-English note when Python 3.11+ or Node 20+ is missing.
+- One-click Mac download: `Session-Doctor-mac.zip` attached to the v0.1.0
+  release, so website visitors never touch folders.
+
+### Changed
+
+- README header is now a centered cover block: logo, flat-square badge row,
+  tagline, section nav, and a one-click Download for Mac button wired to
+  the release asset. Body prose stays left-aligned for readability.
+- README gained the missing depth: 60-second How-it-works, menu-bar
+  controls, Backups & undo model, project tree, and FAQ.
+- Architecture diagrams render centered; repo map and launch docs synced
+  with the committed app and shared bootstrap path.
 
 ## [0.1.0] - 2026-09-15
 
