@@ -1,0 +1,16 @@
+backups/
+backups-opencode/
+.DS_Store
+activity.jsonl
+.venv/
+__pycache__/
+.pytest_cache/
+settings.json
+web/node_modules/
+web/.next/
+web/out/
+web/.env*.local
+logs/
+.session-doctor.pid
+.session-doctor.lock
+*.app
