@@ -5,11 +5,17 @@ all works under the hood: [ARCHITECTURE](ARCHITECTURE.md).
 
 ## Launching
 
-- **Menu-bar app (recommended):** double-click **Session Doctor**. A pulse
-  icon appears in the menu bar (🟢 running / 🔴 stopped) and the dashboard
-  opens in a fresh browser window. First launch only: right-click → Open
-  (unsigned app, macOS asks once). Rebuild it anytime with
-  `scripts/build-app.sh`.
+- **Menu-bar app (recommended):** double-click **Session Doctor** — it ships
+  in the repo, so a fresh clone runs on click. A pulse icon appears in the
+  menu bar (🟢 running / 🔴 stopped) and the dashboard opens in a fresh
+  browser window. First launch only: right-click → Open (unsigned app,
+  macOS asks once).
+- **First launch builds itself:** with no Python environment or web build
+  present, the app sets both up in the background (a few minutes, one time
+  only). The menu reads "Setting up first launch…" while it works and the
+  dashboard opens when it's ready. You need Python 3.11+ and Node 20+
+  installed; if either is missing you'll get a plain-English note naming
+  it. Details stream to the log (menu → Show Log).
 - **Terminal:** `./run.sh` (add `--headless` to skip the browser,
   `--port N` to pin the port). If the port is already serving, it opens a
   fresh window instead of starting a second server.

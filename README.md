@@ -7,12 +7,21 @@ Fixes local AI chats stuck on `reasoning encrypted_content was not issued to thi
 
 ## Quick Start
 
+**No terminal:** clone the repo, double-click **Session Doctor**, and wait
+through the one-time setup — the app builds what it needs in the background
+(a few minutes, menu shows "Setting up first launch…") and the dashboard
+opens by itself. Your machine needs Python 3.11+ and Node 20+ installed;
+if either is missing the app says so plainly instead of failing weirdly.
+First launch only: right-click → Open, since the app is unsigned.
+
+**Terminal:**
+
 ```bash
 ./setup.sh
 ./run.sh
 ```
 
-Pick a red chat → **Preview** → **Back up + Fix** → hit Retry in your chat. Same chat, just unlocked. (Prefer clicks? Build the menu-bar app with `scripts/build-app.sh` and double-click **Session Doctor** — no terminal needed.)
+Pick a red chat → **Preview** → **Back up + Fix** → hit Retry in your chat. Same chat, just unlocked.
 
 ## Features
 
@@ -72,6 +81,8 @@ cd session-doctor
 
 `setup.sh` builds the Python env, installs test deps, runs `npm ci` plus the
 production web build, and smokes the test suite. Nothing global is installed.
+Double-clicking the app does the runtime half of this automatically on first
+launch (it skips only the test smoke).
 
 ## Usage
 

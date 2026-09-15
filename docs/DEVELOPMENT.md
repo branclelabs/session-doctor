@@ -16,6 +16,11 @@ for Python, `npm run dev` / `npm run build` / `npx tsc --noEmit` inside
 `web/`. Stdlib-only Python — the sole runtime dependency is `pytest` for
 tests. Frontend deps are pinned in `web/package-lock.json`.
 
+First-launch runtime setup lives in `scripts/bootstrap.sh`, shared by
+`setup.sh` and the app (`doctor.sh` runs it automatically when `.venv` or
+`web/out` is missing). Keep it runtime-only: no test installs, no smoke —
+`setup.sh` adds those on top.
+
 ## Testing rules (non-negotiable)
 
 1. **Live databases are read-only, forever.** Hermes (`~/.hermes/state.db`)
@@ -86,6 +91,9 @@ missing falls back to the default with a notice in the response.
 
 1. Add entries under `CHANGELOG.md → Unreleased` with every change.
 2. Bump `version` in `pyproject.toml` (and the UI footer to match).
-3. Move `Unreleased` into a dated `## [x.y.z] - YYYY-MM-DD` section.
-4. Run the full gate: `./setup.sh` (pytest + build), boot smoke against a
+3. If `scripts/SessionDoctorBar.swift` changed, rebuild the app with
+   `scripts/build-app.sh` and commit the bundle with the same change —
+   the shipped `.app` must never go stale.
+4. Move `Unreleased` into a dated `## [x.y.z] - YYYY-MM-DD` section.
+5. Run the full gate: `./setup.sh` (pytest + build), boot smoke against a
    snapshot copy, `git status` review. Tag the release.
