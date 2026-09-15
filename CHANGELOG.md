@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing yet. New changes land here first, grouped by type, then move into
-the next versioned section at release time.
+### Added
+
+- The built macOS app ships in the repo: clone, double-click
+  **Session Doctor**, and it runs — no terminal, no separate download.
+- Self-building first launch: a fresh clone bootstraps its Python
+  environment and production web UI in the background (`scripts/bootstrap.sh`,
+  shared with `setup.sh`), with a "Setting up first launch…" state in the
+  menu and a plain-English note when Python 3.11+ or Node 20+ is missing.
 
 ## [0.1.0] - 2026-09-15
 
